@@ -1,11 +1,42 @@
 #include <stdio.h>
+#include <stdlib.h> // Necessário para a função abs() da habilidade Octaedro
 
-// Desafio Jogo de Batalha Naval - Nível Aventureiro
+// Desafio Jogo de Batalha Naval - Nível Mestre
 
+// Função para aplicar a habilidade Cruz no tabuleiro
+void aplicarHabilidadeCruz(int tabuleiro[10][10], int linha_centro, int coluna_centro) {
+    int linha, coluna;
+    printf("\nAplicando Habilidade: Cruz em [%d][%d]\n", linha_centro, coluna_centro);
+
+    for (linha = 0; linha < 10; linha++) {
+        for (coluna = 0; coluna < 10; coluna++) {
+            if (linha == linha_centro || coluna == coluna_centro) {
+                if (tabuleiro[linha][coluna] != 3) {
+                    tabuleiro[linha][coluna] = 5;
+                }
+            }
+        }
+    }
+}
+
+// Função para aplicar a habilidade Octaedro (Losango)
+void aplicarHabilidadeOctaedro(int tabuleiro[10][10], int linha_centro, int coluna_centro, int raio) {
+    int linha, coluna;
+    printf("\nAplicando Habilidade: Octaedro em [%d][%d] com raio %d\n", linha_centro, coluna_centro, raio);
+
+    for (linha = 0; linha < 10; linha++) {
+        for (coluna = 0; coluna < 10; coluna++) {
+            if (abs(linha - linha_centro) + abs(coluna - coluna_centro) <= raio) {
+                if (tabuleiro[linha][coluna] != 3) {
+                    tabuleiro[linha][coluna] = 5;
+                }
+            }
+        }
+    }
+}
 
 int main() {
-
-    // Criando o Tabuleiro
+    // Criando o tabuleiro
     int tabuleiro[10][10];
     int linha, coluna;
 
@@ -17,29 +48,20 @@ int main() {
 
     // Posicionar os Quatro Navios (3)
     int i;
-
-    // Navio 1 (Horizontal) na linha 2, colunas 2, 3 e 4
     for (i = 0; i < 3; i++) {
-        tabuleiro[2][2 + i] = 3;
+        tabuleiro[2][2 + i] = 3; // Horizontal
+        tabuleiro[5 + i][5] = 3; // Vertical
+        tabuleiro[0 + i][0 + i] = 3; // Diagonal Principal
+        tabuleiro[0 + i][9 - i] = 3; // Diagonal Secundária
     }
 
-    // Navio 2 (Vertical) na coluna 5, linhas 5, 6 e 7
-    for (i = 0; i < 3; i++) {
-        tabuleiro[5 + i][5] = 3;
-    }
+    // APLICAR UMA HABILIDADE ESPECIAL (5)
+    aplicarHabilidadeOctaedro(tabuleiro, 7, 2, 2);
 
-    // Navio 3 (Diagonal Principal) nas posições [0][0], [1][1], [2][2]
-    for (i = 0; i < 3; i++) {
-        tabuleiro[0 + i][0 + i] = 3;
-    }
-
-    // Navio 4 (Diagonal Secundária) nas posições [0][9], [1][8], [2][7]
-    for (i = 0; i < 3; i++) {
-        tabuleiro[0 + i][9 - i] = 3;
-    }
 
     // Imprimir o Tabuleiro Final
-    printf("Tabuleiro Batalha Naval (Nivel Aventureiro)\n");
+    printf("\nTabuleiro Batalha Naval\n");
+    printf(" 0 - Agua | 3 - Navio | 5 - Area de Habilidade\n\n");
     for (linha = 0; linha < 10; linha++) {
         for (coluna = 0; coluna < 10; coluna++) {
             printf("%d ", tabuleiro[linha][coluna]);
